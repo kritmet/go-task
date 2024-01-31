@@ -38,7 +38,7 @@ func (c *taskController) Create(ctx *gin.Context) {
 		return
 	}
 
-	err = c.usecase.Create(request)
+	err = c.usecase.Create(ctx, request)
 	if err != nil {
 		_ = ctx.Error(err)
 		return
@@ -75,7 +75,7 @@ func (c *taskController) Update(ctx *gin.Context) {
 		return
 	}
 
-	err = c.usecase.Update(request)
+	err = c.usecase.Update(ctx, request)
 	if err != nil {
 		_ = ctx.Error(err)
 		return
@@ -112,7 +112,7 @@ func (c *taskController) UpdateStatus(ctx *gin.Context) {
 		return
 	}
 
-	err = c.usecase.UpdateStatus(request)
+	err = c.usecase.UpdateStatus(ctx, request)
 	if err != nil {
 		_ = ctx.Error(err)
 		return
@@ -140,7 +140,7 @@ func (c *taskController) Delete(ctx *gin.Context) {
 		return
 	}
 
-	err = c.usecase.Delete(uint(i))
+	err = c.usecase.Delete(ctx, uint(i))
 	if err != nil {
 		_ = ctx.Error(err)
 		return
@@ -168,7 +168,7 @@ func (c *taskController) GetOneByID(ctx *gin.Context) {
 		return
 	}
 
-	task, err := c.usecase.GetOneByID(uint(i))
+	task, err := c.usecase.GetOneByID(ctx, uint(i))
 	if err != nil {
 		_ = ctx.Error(err)
 		return
@@ -196,7 +196,7 @@ func (c *taskController) GetAll(ctx *gin.Context) {
 		return
 	}
 
-	tasks, err := c.usecase.GetAll(request)
+	tasks, err := c.usecase.GetAll(ctx, request)
 	if err != nil {
 		_ = ctx.Error(err)
 		return

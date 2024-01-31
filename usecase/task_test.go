@@ -1,8 +1,10 @@
 package usecase
 
 import (
+	"net/http/httptest"
 	"testing"
 
+	"github.com/gin-gonic/gin"
 	"github.com/kritmet/go-task/app"
 	"github.com/kritmet/go-task/app/config"
 	"github.com/kritmet/go-task/domain"
@@ -23,12 +25,15 @@ func init() {
 type TestSuite struct {
 	usecase        domain.TaskUsecase
 	mockRepository *mocks.TaskRepository
+	ctx            *gin.Context
 	T              *testing.T
 }
 
 func (s *TestSuite) SetupTest() {
 	s.mockRepository = mocks.NewTaskRepository(s.T)
 	s.usecase = NewTaskUsecase(&app.Application{ReturnResult: config.RR}, s.mockRepository)
+	s.ctx, _ = gin.CreateTestContext(httptest.NewRecorder())
+
 }
 
 func TestCreateTask(t *testing.T) {
@@ -47,7 +52,7 @@ func TestCreateTask(t *testing.T) {
 			mock.AnythingOfType("*domain.Task"),
 		).Return(nil).Once()
 
-		err := s.usecase.Create(request)
+		err := s.usecase.Create(s.ctx, request)
 		assert.NoError(t, err)
 
 		s.mockRepository.AssertExpectations(t)
@@ -59,7 +64,7 @@ func TestCreateTask(t *testing.T) {
 			mock.AnythingOfType("*domain.Task"),
 		).Return(gorm.ErrInvalidData).Once()
 
-		err := s.usecase.Create(request)
+		err := s.usecase.Create(s.ctx, request)
 		assert.Error(t, err)
 
 		s.mockRepository.AssertExpectations(t)
@@ -85,7 +90,7 @@ func TestUpdateTask(t *testing.T) {
 			mock.AnythingOfType("*domain.Task"),
 		).Return(nil).Once()
 
-		err := s.usecase.Update(request)
+		err := s.usecase.Update(s.ctx, request)
 		assert.NoError(t, err)
 
 		s.mockRepository.AssertExpectations(t)
@@ -97,7 +102,7 @@ func TestUpdateTask(t *testing.T) {
 			mock.AnythingOfType("*domain.Task"),
 		).Return(gorm.ErrInvalidData).Once()
 
-		err := s.usecase.Update(request)
+		err := s.usecase.Update(s.ctx, request)
 		assert.Error(t, err)
 
 		s.mockRepository.AssertExpectations(t)
@@ -122,7 +127,7 @@ func TestUpdateStatusTask(t *testing.T) {
 			&domain.Task{},
 		).Return(nil).Once()
 
-		err := s.usecase.UpdateStatus(request)
+		err := s.usecase.UpdateStatus(s.ctx, request)
 		assert.NoError(t, err)
 
 		s.mockRepository.AssertExpectations(t)
@@ -137,7 +142,7 @@ func TestUpdateStatusTask(t *testing.T) {
 			&domain.Task{},
 		).Return(gorm.ErrInvalidValue).Once()
 
-		err := s.usecase.UpdateStatus(request)
+		err := s.usecase.UpdateStatus(s.ctx, request)
 		assert.Error(t, err)
 
 		s.mockRepository.AssertExpectations(t)
@@ -167,7 +172,7 @@ func TestDeleteTask(t *testing.T) {
 			task,
 		).Return(nil).Once()
 
-		err := s.usecase.Delete(id)
+		err := s.usecase.Delete(s.ctx, id)
 		assert.NoError(t, err)
 
 		s.mockRepository.AssertExpectations(t)
@@ -179,7 +184,7 @@ func TestDeleteTask(t *testing.T) {
 			id,
 		).Return(domain.Task{}, gorm.ErrRecordNotFound).Once()
 
-		err := s.usecase.Delete(id)
+		err := s.usecase.Delete(s.ctx, id)
 		assert.Error(t, err)
 
 		s.mockRepository.AssertExpectations(t)
@@ -203,7 +208,7 @@ func TestDeleteTask(t *testing.T) {
 			task,
 		).Return(gorm.ErrInvalidData).Once()
 
-		err := s.usecase.Delete(id)
+		err := s.usecase.Delete(s.ctx, id)
 		assert.Error(t, err)
 
 		s.mockRepository.AssertExpectations(t)
@@ -228,7 +233,7 @@ func TestGetOneByIDTask(t *testing.T) {
 			id,
 		).Return(task, nil).Once()
 
-		result, err := s.usecase.GetOneByID(id)
+		result, err := s.usecase.GetOneByID(s.ctx, id)
 		assert.NoError(t, err)
 		assert.Equal(t, task, result)
 
@@ -241,7 +246,7 @@ func TestGetOneByIDTask(t *testing.T) {
 			id,
 		).Return(domain.Task{}, gorm.ErrInvalidField).Once()
 
-		_, err := s.usecase.GetOneByID(id)
+		_, err := s.usecase.GetOneByID(s.ctx, id)
 		assert.Error(t, err)
 
 		s.mockRepository.AssertExpectations(t)
@@ -253,7 +258,7 @@ func TestGetOneByIDTask(t *testing.T) {
 			id,
 		).Return(domain.Task{}, gorm.ErrRecordNotFound).Once()
 
-		_, err := s.usecase.GetOneByID(id)
+		_, err := s.usecase.GetOneByID(s.ctx, id)
 		assert.Error(t, err)
 
 		s.mockRepository.AssertExpectations(t)
@@ -287,7 +292,7 @@ func TestGetAllTask(t *testing.T) {
 			request,
 		).Return(tasks, nil).Once()
 
-		result, err := s.usecase.GetAll(request)
+		result, err := s.usecase.GetAll(s.ctx, request)
 		assert.NoError(t, err)
 		assert.Equal(t, tasks, result)
 
@@ -307,7 +312,7 @@ func TestGetAllTask(t *testing.T) {
 			query,
 		).Return([]domain.Task{}, gorm.ErrInvalidField).Once()
 
-		_, err := s.usecase.GetAll(query)
+		_, err := s.usecase.GetAll(s.ctx, query)
 		assert.Error(t, err)
 
 		s.mockRepository.AssertExpectations(t)

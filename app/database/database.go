@@ -1,10 +1,10 @@
 package database
 
 import (
-	"fmt"
 	"net/url"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -62,9 +62,16 @@ func New(config *Configuration) (*Session, error) {
 }
 
 // Get get
-func Get() *gorm.DB {
-	fmt.Println("database", database)
+func Get(c *gin.Context) *gorm.DB {
+	if db, ok := c.Get("db"); ok {
+		return db.(*gorm.DB)
+	}
 	return database
+}
+
+// Begin begin
+func Begin() *gorm.DB {
+	return database.Begin()
 }
 
 // Set set

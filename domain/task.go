@@ -64,12 +64,12 @@ type TaskController interface {
 
 // TaskUsecase task usecase
 type TaskUsecase interface {
-	Create(request CreateTaskRequest) error
-	Update(request UpdateTaskRequest) error
-	UpdateStatus(request UpdateStatusTaskRequest) error
-	Delete(id uint) error
-	GetOneByID(id uint) (Task, error)
-	GetAll(query GetAllTaskRequest) ([]Task, error)
+	Create(c *gin.Context, request CreateTaskRequest) error
+	Update(c *gin.Context, request UpdateTaskRequest) error
+	UpdateStatus(c *gin.Context, request UpdateStatusTaskRequest) error
+	Delete(c *gin.Context, id uint) error
+	GetOneByID(c *gin.Context, id uint) (Task, error)
+	GetAll(c *gin.Context, query GetAllTaskRequest) ([]Task, error)
 }
 
 // TaskRepository task repository

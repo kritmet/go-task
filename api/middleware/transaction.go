@@ -26,8 +26,10 @@ func TransactionDatabase(skipper Skipper) gin.HandlerFunc {
 		}()
 
 		if !skip {
-			db = database.Get().Begin()
+			db = database.Begin()
 			c.Set("db", db)
+			c.Next()
+
 			if c.Writer.Status() == http.StatusOK {
 				_ = db.Commit()
 			} else {
