@@ -1,0 +1,16 @@
+APP:
+  PORT: 8000
+
+SWAGGER:
+  TITLE: "Task API Docs"
+  DESCRIPTION: "task API is to do list"
+  VERSION: "1.0"
+  HOST: "localhost:8000"
+
+DATABASE:
+  HOST: "tiny.db.elephantsql.com"
+  PORT: 5432
+  USERNAME: "mmbyabfd"
+  PASSWORD: "8EuNLZdhkwQ63vCG_hK0AfMuwr-JdpHw"
+  NAME: "mmbyabfd"
+  DRIVER_NAME: "postgres"

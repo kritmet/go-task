@@ -1,0 +1,5 @@
+development:
+    dialect: postgres
+    datasource: host=tiny.db.elephantsql.com dbname=mmbyabfd user=mmbyabfd password=8EuNLZdhkwQ63vCG_hK0AfMuwr-JdpHw port=5432 sslmode=require
+    dir: migrations
+    table: migrations

@@ -1,0 +1,15 @@
+success:
+  code: 200
+  message: "Success"
+
+bad_request:
+  code: 400
+  message: "System cannot process this request at the moment. Please try again later"
+
+connection_error:
+  code: 500
+  message: "System cannot process this request at the moment. Please try again later"
+
+database_not_found:
+  code: 404
+  message: "Database not found. Please try again"
